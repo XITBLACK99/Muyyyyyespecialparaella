@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Plan h ✨</title>
+    <style>
+        body { margin: 0; background: #000; overflow: hidden; font-family: sans-serif; color: white; user-select: none; touch-action: none; }
+        canvas { display: block; position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; }
+
+        #ui-layer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center; z-index: 100; pointer-events: none;
+        }
+
+        .layer { transition: opacity 0.8s; text-align: center; pointer-events: auto; width: 90%; }
+        .hidden { display: none !important; opacity: 0; }
+
+        .photo-container {
+            width: 180px; height: 180px; border-radius: 50%;
+            border: 4px solid #fff; box-shadow: 0 0 25px #00ffff;
+            overflow: hidden; margin: 0 auto 20px;
+            transition: all 1.2s ease;
+        }
+        .photo-mini { width: 100px; height: 100px; box-shadow: 0 0 15px #00ffff; }
+        .photo-container img { width: 100%; height: 100%; object-fit: cover; }
+
+        #letter-card {
+            background: rgba(10, 10, 10, 0.95); padding: 25px; border-radius: 25px;
+            border: 1px solid #ff758c; max-width: 320px; margin: 0 auto;
+            box-shadow: 0 0 40px rgba(0,0,0,1);
+        }
+
+        .btn {
+            background: #ff758c; border: none; padding: 12px 28px;
+            border-radius: 50px; color: white; font-weight: bold; margin-top: 15px;
+            cursor: pointer; box-shadow: 0 5px 15px rgba(255,117,140,0.4);
+        }
+
+        #timer-display { font-family: 'Courier New', monospace; font-size: 1.1rem; color: #00ff00; margin: 15px 0; text-shadow: 0 0 5px #00ff00; }
+
+        .promise-list { text-align: left; list-style: none; padding: 0; margin: 15px 0; }
+        .promise-list li { margin-bottom: 10px; font-size: 0.95rem; display: flex; align-items: center; }
+        .promise-list li::before { content: "⭐"; margin-right: 10px; font-size: 0.8rem; }
+
+        #final-names h1 { font-size: 3.5rem; margin: 0; filter: drop-shadow(0 0 15px currentColor); opacity: 0; transition: all 2s; }
+
+        #hint { position: fixed; top: 20px; width: 100%; text-align: center; opacity: 0.7; z-index: 200; font-size: 14px; }
+        
+        .jenny-btn { background: gold !important; color: black !important; font-size: 1.3rem !important; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" loop>
+        <source src="musica.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="hint">Toca 5 veces para la magia...</div>
+
+    <div id="ui-layer">
+        <div id="part2" class="layer hidden">
+            <div class="photo-container" id="main-photo"><img src="https://i.postimg.cc/zBwTbtc9/IMG-20260219-WA0221.jpg"></div>
+            <div id="p2-ui">
+                <h2 style="color:#ff758c">Para la mejor amiga que tengo </h2>
+                <button class="btn" onclick="playAndShow(3)">Leer Carta ✨</button>
+            </div>
+        </div>
+
+        <div id="part3" class="layer hidden">
+            <div id="letter-card">
+                <h3 style="color:#ff758c">Nuestra Historia ✨</h3>
+                <p>Gracias por ser la persona que convierte mis días en momentos increíbles.</p>
+                <button class="btn" onclick="showPart(4)">Ir al Universo 🚀</button>
+            </div>
+        </div>
+
+        <div id="part6" class="layer hidden">
+            <div id="letter-card" style="border-color: #ff007f;">
+                <h2 style="color: #ff007f">Para Siempre ♾️</h2>
+                <p>Nuestra amistad es un universo que sigue creciendo...</p>
+                <button class="btn" style="background: #ff007f;" onclick="showPart(7)">Continuar ✨</button>
+            </div>
+        </div>
+
+        <div id="part7" class="layer hidden">
+            <div id="letter-card" style="border-color: #ffd700;">
+                <h2 style="color: #ffd700;">Un Tesoro ✨</h2>
+                <p>Eres el mejor regalo que la vida me dio. Cada segundo cuenta.</p>
+                <button class="btn" style="background: #ffd700; color: #000;" onclick="showPart(8)">Nuestro Tiempo ⏳</button>
+            </div>
+        </div>
+
+        <div id="part8" class="layer hidden">
+            <div id="letter-card" style="border-color: #00ff00;">
+                <h2 style="color: #00ff00;">Llevamos siendo amigos...</h2>
+                <div id="timer-display">Calculando...</div>
+                <button class="btn" style="background: #00ff00; color: #000;" onclick="showPart(9)">Nuestras Promesas 🤝</button>
+            </div>
+        </div>
+
+        <div id="part9" class="layer hidden">
+            <div id="letter-card" style="border-color: #00ffff;">
+                <h2 style="color: #00ffff;">Mis Promesas para Ti ✨</h2>
+                <ul class="promise-list">
+                    <li>Estar siempre que me necesites.</li>
+                    <li>Celebrar cada uno de tus logros.</li>
+                    <li>Escucharte sin juzgar, siempre.</li>
+                    <li>Seguir creando recuerdos juntos.</li>
+                    <li>Ser tu lugar seguro en días grises.</li>
+                </ul>
+                <button class="btn" style="background: #00ffff; color: #000;" onclick="startCapa10()">Siguiente capa ➡️</button>
+            </div>
+        </div>
+
+        <div id="part10" class="layer hidden">
+            <div id="final-names">
+                <h1 id="j-name" style="color: #ffd700;">JENNY</h1>
+                <h1 id="l-name" style="color: #00ffff;">LEONICITA</h1>
+            </div>
+            <button class="btn" id="btn-to-11" style="opacity:0;" onclick="startCapa11()">Descubrir algo más 🌸</button>
+        </div>
+
+        <div id="part11" class="layer hidden">
+            <h2 id="flower-msg" style="color: #ff758c;">Toca para hacerme florecer... 🌸</h2>
+            <div id="final-photo-flower" class="photo-container hidden" style="border-color: gold;"><img src="https://i.postimg.cc/zBwTbtc9/IMG-20260219-WA0221.jpg"></div>
+        </div>
+
+        <div id="part12" class="layer hidden">
+            <div id="jenny-ui">
+                <h2 style="color: white; text-shadow: 0 0 10px gold;">EL UNIVERSO DE JENNY</h2>
+                <button class="btn jenny-btn" onclick="triggerJennyExplosion(event)">TOCA AQUÍ JENNY ✨</button>
+            </div>
+            <div id="final-reveal-all" class="hidden">
+                <h1 style="color: gold; text-shadow: 0 0 20px gold;">NUESTRO DESTINO</h1>
+                <div class="photo-container" style="border-color: white; transform: scale(1.2);"><img src="https://i.postimg.cc/zBwTbtc9/IMG-20260219-WA0221.jpg"></div>
+                <p style="letter-spacing: 5px; font-weight: bold;">JENNY LEONICITA</p>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d', { alpha: false });
+        let width, height, particles = [], orbitWords = [], hearts = [], clicks = 0, step = 1, flowerPetals = 0, jennyClicks = 0;
+        
+        const FECHA_INICIO = new Date(2026, 1, 8, 21, 15, 0); 
+        let words = ["LEALTAD", "RISAS", "CÓMPLICE", "AVENTURAS", "SIEMPRE", "ÚNICA", "ESPECIAL", "MAGIA", "ETERNA", "APOYO"];
+
+        function init() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
+        window.addEventListener('resize', init);
+        init();
+
+        function playAndShow(n) {
+            const music = document.getElementById('bg-music');
+            music.play().catch(e => console.log("Audio play blocked"));
+            showPart(n);
+        }
+
+        function showPart(n) {
+            document.querySelectorAll('.layer').forEach(l => l.classList.add('hidden'));
+            step = n;
+            if(n === 4) {
+                document.getElementById('part2').classList.remove('hidden');
+                document.getElementById('main-photo').classList.add('photo-mini');
+                document.getElementById('p2-ui').classList.add('hidden');
+            } else {
+                const target = document.getElementById('part' + n);
+                if(target) target.classList.remove('hidden');
+            }
+        }
+
+        function startCapa10() {
+            showPart(10);
+            setTimeout(() => { document.getElementById('j-name').style.opacity="1"; }, 1000);
+            setTimeout(() => { document.getElementById('l-name').style.opacity="1"; }, 2500);
+            setTimeout(() => { document.getElementById('btn-to-11').style.opacity="1"; }, 4000);
+        }
+
+        function startCapa11() { particles=[]; showPart(11); step=11; }
+        function startCapa12() { particles=[]; showPart(12); step=12; }
+
+        function triggerJennyExplosion(e) {
+            jennyClicks++;
+            const rect = e.target.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            
+            for(let i=0; i<15; i++) {
+                particles.push(new TextParticle(x, y, "Jenny", 60)); 
+            }
+
+            if(jennyClicks >= 5) {
+                document.getElementById('jenny-ui').classList.add('hidden');
+                document.getElementById('final-reveal-all').classList.remove('hidden');
+                for(let i=0; i<100; i++) particles.push(new Particle(width/2, height/2, 60));
+            }
+        }
+
+        class Particle {
+            constructor(x, y, h) {
+                this.x = x; this.y = y; this.h = h;
+                this.color = `hsl(${h}, 100%, 75%)`;
+                const ang = Math.random()*Math.PI*2; const force = Math.random()*5+2;
+                this.vx = Math.cos(ang)*force; this.vy = Math.sin(ang)*force; this.alpha = 1;
+            }
+            update() { this.x += this.vx; this.y += this.vy; this.alpha -= 0.015; }
+            draw() { ctx.globalAlpha = this.alpha; ctx.fillStyle = this.color; ctx.fillRect(this.x, this.y, 2, 2); }
+        }
+
+        class TextParticle {
+            constructor(x, y, text, h) {
+                this.x = x; this.y = y; this.text = text; this.h = h;
+                this.alpha = 1;
+                this.vx = (Math.random()-0.5)*8;
+                this.vy = (Math.random()-0.5)*8;
+                this.size = Math.random()*15 + 15;
+            }
+            update() { this.x += this.vx; this.y += this.vy; this.alpha -= 0.01; this.vy += 0.05; }
+            draw() {
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = `hsl(${this.h}, 100%, 75%)`;
+                ctx.font = `bold ${this.size}px Arial`;
+                ctx.fillText(this.text, this.x, this.y);
+            }
+        }
+
+        class Heart {
+            constructor() { this.x = Math.random()*width; this.y = -20; this.size = Math.random()*10+10; this.speed = Math.random()*2+1; }
+            update() { this.y += this.speed; if(this.y > height) this.y = -20; }
+            draw() { ctx.globalAlpha = 0.6; ctx.fillStyle = "#ff007f"; ctx.font = `${this.size}px serif`; ctx.fillText("❤️", this.x, this.y); }
+        }
+
+        class WordOrbit {
+            constructor(text) { this.text = text; this.angle = Math.random()*6.2; this.radius = 0; }
+            draw() {
+                this.angle += 0.005; if(this.radius < 130) this.radius += 1.5;
+                const x = width/2 + Math.cos(this.angle)*this.radius; const y = height/2 + Math.sin(this.angle)*this.radius;
+                ctx.globalAlpha = 1; ctx.fillStyle = "cyan"; ctx.font = "bold 14px Arial"; ctx.fillText(this.text, x, y);
+            }
+        }
+
+        function animate() {
+            ctx.globalAlpha = 0.2; ctx.fillStyle = '#000'; ctx.fillRect(0, 0, width, height);
+            
+            if(step === 12 && jennyClicks < 5 && Math.random() < 0.1) {
+                particles.push(new TextParticle(Math.random()*width, 0, "Te quiero mucho", 330));
+            }
+
+            particles.forEach((p, i) => { p.update(); p.draw(); if(p.alpha <= 0) particles.splice(i, 1); });
+            if(step === 4) orbitWords.forEach(w => w.draw());
+            if(step >= 6 && step < 11) { if(hearts.length < 25) hearts.push(new Heart()); hearts.forEach(h => { h.update(); h.draw(); }); }
+            requestAnimationFrame(animate);
+        }
+
+        const handleInput = (x, y) => {
+            if(step === 11) {
+                flowerPetals++;
+                for(let i=0; i<30; i++) particles.push(new Particle(x, y, 330+(flowerPetals*5)));
+                if(flowerPetals >= 10) {
+                    document.getElementById('flower-msg').innerHTML = `<button class="btn" onclick="startCapa12()" style="background:gold; color:black">CONEXIÓN FINAL ✨</button>`;
+                    document.getElementById('final-photo-flower').classList.remove('hidden');
+                }
+            }
+            if(step === 1 || step === 4) {
+                for(let j=0; j<30; j++) particles.push(new Particle(x, y, Math.random()*360));
+                if(step === 1) { clicks++; if(clicks >= 5) { document.getElementById('hint').style.display='none'; showPart(2); } }
+                else if(step === 4) { if(words.length > 0) orbitWords.push(new WordOrbit(words.shift())); else setTimeout(() => showPart(6), 1000); }
+            }
+        };
+
+        window.addEventListener('mousedown', (e) => { if(e.target.tagName !== 'BUTTON') handleInput(e.clientX, e.clientY); });
+        window.addEventListener('touchstart', (e) => { if(e.target.tagName !== 'BUTTON') handleInput(e.touches[0].clientX, e.touches[0].clientY); });
+
+        setInterval(() => {
+            const diff = Math.abs(new Date() - FECHA_INICIO);
+            const d = Math.floor(diff/86400000); const h = Math.floor((diff/3600000)%24);
+            const m = Math.floor((diff/60000)%60); const s = Math.floor((diff/1000)%60);
+            const el = document.getElementById('timer-display'); if(el) el.innerHTML = `${d}d : ${h}h : ${m}m : ${s}s`;
+        }, 1000);
+        animate();
+    </script>
+</body>
+</html>
